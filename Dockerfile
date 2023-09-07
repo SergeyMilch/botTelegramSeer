@@ -15,7 +15,8 @@ FROM alpine:latest
 WORKDIR /root/
 # Копирование бинарного файла из предыдущего этапа
 COPY --from=0 /github.com/SergeyMilch/botTelegramSeer/bin/bot .
-COPY .env /root/.env
+ARG ENV_FILE
+COPY $ENV_FILE /root/.env
 COPY updated_Azazel.txt /root/updated_Azazel.txt
 
 EXPOSE 80
