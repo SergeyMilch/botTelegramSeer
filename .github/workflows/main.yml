@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Сборка Docker-образа
-      run: docker build -t telegram-bot-seer:v0.1 . --build-arg ENV_FILE=<(echo "${{ secrets.ENV_CONTENT }}")
+      run: docker build -t telegram-bot-seer:v0.1 .
 
     - name: Логин в Docker Hub (или другом реестре)
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -28,8 +28,10 @@ jobs:
         host: ${{ secrets.REMOTE_SERVER_HOST }}
         username: ${{ secrets.REMOTE_SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        env:
+          ENV_VAR: ${{ secrets.ENV_CONTENT }}
         script: |
           docker pull sermildev/telegram-bot:v0.1
           docker stop telegram-bot-container || true
           docker rm telegram-bot-container || true
-          docker run -d -p 80:80 --name telegram-bot-container sermildev/telegram-bot:v0.1
+          docker run -d -p 80:80 --name telegram-bot-container -e ENV_VAR sermildev/telegram-bot:v0.1
