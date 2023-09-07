@@ -1,9 +1,9 @@
 # Этап 1: Создание бинарного файла приложения
 FROM golang:1.20-alpine3.18 AS builder
 
-COPY . /github.com/SergeyMilch/botTelegramSeer/
+COPY . .
 
-WORKDIR /github.com/SergeyMilch/botTelegramSeer/
+WORKDIR /app
 
 RUN go mod download
 
@@ -14,9 +14,8 @@ FROM alpine:latest
 
 WORKDIR /root/
 # Копирование бинарного файла из предыдущего этапа
-COPY --from=0 /github.com/SergeyMilch/botTelegramSeer/bin/bot .
-ARG ENV_FILE
-COPY $ENV_FILE /root/.env
+COPY --from=0 /app/bin/bot .
+COPY .env /root/.env
 COPY updated_Azazel.txt /root/updated_Azazel.txt
 
 EXPOSE 80
