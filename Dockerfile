@@ -18,7 +18,7 @@ WORKDIR /root/
 
 # Копирование бинарного файла и других файлов
 COPY --from=builder /app/bin/bot .
-COPY .env /root/.env
+COPY .env .
 COPY updated_Azazel.txt /root/updated_Azazel.txt
 
 EXPOSE 80

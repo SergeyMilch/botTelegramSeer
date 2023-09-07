@@ -14,13 +14,16 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Сборка Docker-образа
-      run: docker build -t telegram-bot-seer:v0.1 . --build-arg ENV_FILE=<(echo "${{ secrets.ENV_CONTENT }}")
+      run: docker build -t telegram-bot-seer:v0.1 .
+
+    - name: Запуск контейнера с передачей переменных окружения
+      run: docker run -d -p 80:80 --env-file .env --name telegram-bot-container sermildev/telegram-bot:v0.1  
 
     - name: Логин в Docker Hub (или другом реестре)
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       
     - name: Пуш в Docker Hub (или другой реестр)
-      run: docker push sermildev/telegram-bot:0.1
+      run: docker push sermildev/telegram-bot:v0.1
 
     - name: Деплой на удаленный сервер
       uses: appleboy/ssh-action@master
@@ -29,7 +32,7 @@ jobs:
         username: ${{ secrets.REMOTE_SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          docker pull sermildev/telegram-bot:0.1
+          docker pull sermildev/telegram-bot:v0.1
           docker stop telegram-bot-container || true
           docker rm telegram-bot-container || true
-          docker run -d -p 80:80 --name telegram-bot-container sermildev/telegram-bot:0.1
+          docker run -d -p 80:80 --name telegram-bot-container sermildev/telegram-bot:v0.1
