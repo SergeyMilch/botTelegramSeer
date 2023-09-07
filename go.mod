@@ -1,4 +1,4 @@
-module github.com/SergeyMilch/botTelegramSeer
+module botTelegram
 
 go 1.20
 

@@ -1,20 +1,23 @@
 # Этап 1: Создание бинарного файла приложения
 FROM golang:1.20-alpine3.18 AS builder
 
-COPY . .
-
 WORKDIR /app
+
+# Копирование всех файлов в контекст сборки
+COPY . .
 
 RUN go mod download
 
-RUN go build -o ./bin/bot main.go
+# Сборка бинарного файла
+RUN go build -o ./bin/bot .
 
 # Этап 2: Запуск приложения в минимальном образе
 FROM alpine:latest
 
 WORKDIR /root/
-# Копирование бинарного файла из предыдущего этапа
-COPY --from=0 /app/bin/bot .
+
+# Копирование бинарного файла и других файлов
+COPY --from=builder /app/bin/bot .
 COPY .env /root/.env
 COPY updated_Azazel.txt /root/updated_Azazel.txt
 
