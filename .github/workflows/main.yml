@@ -29,9 +29,9 @@ jobs:
         username: ${{ secrets.REMOTE_SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         env:
-          ENV_VAR: ${{ secrets.ENV_CONTENT }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         script: |
           docker pull sermildev/telegram-bot:v0.1
           docker stop telegram-bot-container || true
           docker rm telegram-bot-container || true
-          docker run -d -p 80:80 --name telegram-bot-container -e ENV_VAR sermildev/telegram-bot:v0.1
+          docker run -d -p 80:80 --name telegram-bot-container -e BOT_TOKEN sermildev/telegram-bot:v0.1
