@@ -17,13 +17,51 @@ type UserState struct {
 	PageNumber int
 }
 
-func setupTelegramBot() (*tgbotapi.BotAPI, error) {
-	botToken := viper.GetString("BOT_TOKEN")
-	if botToken == "" {
-		log.Fatal("BOT_TOKEN не установлен")
+type Config struct {
+	TelegramToken string
+}
+
+func Init() (*Config, error) {
+	if err := setUpViper(); err != nil {
+		return nil, err
 	}
 
-	bot, err := tgbotapi.NewBotAPI(botToken)
+	var cfg Config
+	if err := unmarshal(&cfg); err != nil {
+		return nil, err
+	}
+
+	if err := fromEnv(&cfg); err != nil {
+		return nil, err
+	}
+
+	return &cfg, nil
+}
+
+func unmarshal(cfg *Config) error {
+	if err := viper.Unmarshal(&cfg); err != nil {
+		return err
+	}
+	return nil
+}
+
+func fromEnv(cfg *Config) error {
+	if err := viper.BindEnv("BOT_TOKEN"); err != nil {
+		return err
+	}
+	cfg.TelegramToken = viper.GetString("BOT_TOKEN")
+
+	return nil
+}
+
+func setUpViper() error {
+	viper.SetConfigName(".env")
+
+	return viper.ReadInConfig()
+}
+
+func setupTelegramBot(token string) (*tgbotapi.BotAPI, error) {
+	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		return nil, err
 	}
@@ -72,8 +110,15 @@ func extractSentence(pageContent []string, pageNumber int, lineNumber int) (stri
 }
 
 func main() {
-	viper.SetConfigFile(".env")
-	viper.ReadInConfig()
+	cfg, err := Init()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bot, err := setupTelegramBot(cfg.TelegramToken)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// Путь к книге
 	bookPath := "updated_Azazel.txt"
 
@@ -83,11 +128,6 @@ func main() {
 	}
 
 	pageContent := strings.Split(string(content), "===============") // Разделитель страниц ел.книги
-
-	bot, err := setupTelegramBot()
-	if err != nil {
-		log.Println(err)
-	}
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60

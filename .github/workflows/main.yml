@@ -31,6 +31,8 @@ jobs:
         push: true
         tags: sermildev/telegram-bot:v0.1
 
+   deploy:
+    runs-on: ubuntu-latest
     - name: Деплой на удаленный сервер
       uses: appleboy/ssh-action@master
       with:
