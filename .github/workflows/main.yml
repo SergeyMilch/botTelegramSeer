@@ -18,12 +18,16 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
+      repository: sermildev/telegram-bot:v0.1
+        tags: v0.1, ${{ secrets.DOCKER_TOKEN }}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
 
     - name: Сборка Docker-образа
-      run: docker build -t telegram-bot:v0.1 .  
+      run: docker build . --file Dockerfile --tag telegram-bot:v0.1 .  
       
     - name: Пуш в Docker Hub
-      run: docker push docker.io/sermildev/telegram-bot:v0.1
+      run: docker push sermildev/telegram-bot:v0.1
 
     - name: Деплой на удаленный сервер
       uses: appleboy/ssh-action@master
@@ -32,7 +36,7 @@ jobs:
         username: ${{ secrets.REMOTE_SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          docker pull docker.io/sermildev/telegram-bot:v0.1
+          docker pull sermildev/telegram-bot:v0.1
           docker stop telegram-bot || true
           docker rm telegram-bot || true
           docker run -d -p 80:80 --name telegram-bot -e BOT_TOKEN=${{ secrets.BOT_TOKEN }} sermildev/telegram-bot:v0.1
