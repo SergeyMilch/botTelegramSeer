@@ -19,7 +19,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
       repository: sermildev/telegram-bot:v0.1
-        tags: v0.1, ${{ secrets.DOCKER_TOKEN }}
+        tags: v0.1
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
 
