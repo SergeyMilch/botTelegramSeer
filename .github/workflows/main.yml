@@ -13,11 +13,11 @@ jobs:
     - name: Подготовка репозитория
       uses: actions/checkout@v2
 
-    - name: Сборка Docker-образа
-      run: docker build -t telegram-bot:v0.1 .
-
     - name: Логин в Docker Hub (или другом реестре)
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Сборка Docker-образа
+      run: docker build -t telegram-bot:v0.1 .  
       
     - name: Пуш в Docker Hub
       run: docker push sermildev/telegram-bot:v0.1

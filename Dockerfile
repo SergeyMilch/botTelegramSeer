@@ -9,7 +9,7 @@ COPY . .
 RUN go mod download
 
 # Сборка бинарного файла
-RUN go build -o ./bin/bot .
+RUN GOOS=linux go build -o ./.bin/bot ./main.go
 
 # Этап 2: Запуск приложения в минимальном образе
 FROM alpine:latest
@@ -17,7 +17,7 @@ FROM alpine:latest
 WORKDIR /root/
 
 # Копирование бинарного файла и других файлов
-COPY --from=builder /app/bin/bot .
+COPY --from=builder /app/.bin/bot .
 
 COPY updated_Azazel.txt /root/updated_Azazel.txt
 
