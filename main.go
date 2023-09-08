@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/spf13/viper"
 )
 
 var userStates = make(map[int]UserState)
@@ -21,43 +20,12 @@ type Config struct {
 	TelegramToken string
 }
 
-func Init() (*Config, error) {
-	if err := setUpViper(); err != nil {
-		return nil, err
+func Init() *Config {
+	cfg := &Config{
+		TelegramToken: os.Getenv("BOT_TOKEN"),
 	}
 
-	var cfg Config
-	if err := unmarshal(&cfg); err != nil {
-		return nil, err
-	}
-
-	if err := fromEnv(&cfg); err != nil {
-		return nil, err
-	}
-
-	return &cfg, nil
-}
-
-func unmarshal(cfg *Config) error {
-	if err := viper.Unmarshal(&cfg); err != nil {
-		return err
-	}
-	return nil
-}
-
-func fromEnv(cfg *Config) error {
-	if err := viper.BindEnv("BOT_TOKEN"); err != nil {
-		return err
-	}
-	cfg.TelegramToken = viper.GetString("BOT_TOKEN")
-
-	return nil
-}
-
-func setUpViper() error {
-	viper.SetConfigName(".env")
-
-	return viper.ReadInConfig()
+	return cfg
 }
 
 func setupTelegramBot(token string) (*tgbotapi.BotAPI, error) {
@@ -110,10 +78,7 @@ func extractSentence(pageContent []string, pageNumber int, lineNumber int) (stri
 }
 
 func main() {
-	cfg, err := Init()
-	if err != nil {
-		log.Fatal(err)
-	}
+	cfg := Init()
 
 	bot, err := setupTelegramBot(cfg.TelegramToken)
 	if err != nil {
