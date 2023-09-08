@@ -18,7 +18,12 @@ type UserState struct {
 }
 
 func setupTelegramBot() (*tgbotapi.BotAPI, error) {
-	bot, err := tgbotapi.NewBotAPI(viper.GetString("BOT_TOKEN"))
+	botToken := viper.GetString("BOT_TOKEN")
+	if botToken == "" {
+		log.Fatal("BOT_TOKEN не установлен")
+	}
+
+	bot, err := tgbotapi.NewBotAPI(botToken)
 	if err != nil {
 		return nil, err
 	}
