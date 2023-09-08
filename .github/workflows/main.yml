@@ -42,4 +42,4 @@ jobs:
           docker pull sermildev/telegram-bot:v0.1
           docker stop telegram-bot || true
           docker rm telegram-bot || true
-          docker run -d --restart always -p 80:80 --name telegram-bot -e BOT_TOKEN sermildev/telegram-bot:v0.1
+          docker run -e BOT_TOKEN -d --restart always -p 80:80 --name telegram-bot sermildev/telegram-bot:v0.1
