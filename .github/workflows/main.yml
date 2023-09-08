@@ -38,8 +38,8 @@ jobs:
         username: ${{ secrets.REMOTE_SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          export BOT_TOKEN=${{ secrets.BOT_TOKEN }}
+          echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
           docker pull sermildev/telegram-bot:v0.1
           docker stop telegram-bot || true
           docker rm telegram-bot || true
-          docker run -e BOT_TOKEN -d --restart always -p 80:80 --name telegram-bot sermildev/telegram-bot:v0.1
+          docker run --env-file .env -d --restart always -p 80:80 --name telegram-bot sermildev/telegram-bot:v0.1
