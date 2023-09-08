@@ -23,7 +23,7 @@ jobs:
       run: docker build -t telegram-bot:v0.1 .  
       
     - name: Пуш в Docker Hub
-      run: docker push telegram-bot:v0.1
+      run: docker push docker.io/library/telegram-bot:v0.1
 
     - name: Деплой на удаленный сервер
       uses: appleboy/ssh-action@master
