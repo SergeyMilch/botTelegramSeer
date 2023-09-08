@@ -33,6 +33,8 @@ jobs:
 
    deploy:
     runs-on: ubuntu-latest
+    steps:
+    
     - name: Деплой на удаленный сервер
       uses: appleboy/ssh-action@master
       with:
