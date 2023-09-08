@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
 var userStates = make(map[int]UserState)
@@ -18,7 +18,7 @@ type UserState struct {
 }
 
 func setupTelegramBot() (*tgbotapi.BotAPI, error) {
-	bot, err := tgbotapi.NewBotAPI(os.Getenv("BOT_TOKEN"))
+	bot, err := tgbotapi.NewBotAPI(viper.GetString("BOT_TOKEN"))
 	if err != nil {
 		return nil, err
 	}
@@ -67,10 +67,8 @@ func extractSentence(pageContent []string, pageNumber int, lineNumber int) (stri
 }
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Error loading .env file")
-	}
+	viper.SetConfigFile(".env")
+	viper.ReadInConfig()
 	// Путь к книге
 	bookPath := "updated_Azazel.txt"
 
