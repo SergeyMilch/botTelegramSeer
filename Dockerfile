@@ -21,6 +21,8 @@ COPY --from=builder /app/.bin/bot .
 
 COPY updated_Azazel.txt /root/updated_Azazel.txt
 
+COPY .env /root/.env
+
 EXPOSE 80
 
 CMD ["./bot"]
