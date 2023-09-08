@@ -77,7 +77,7 @@ func main() {
 		log.Println(err)
 	}
 
-	pageContent := strings.Split(string(content), "===============") // Разделитель страниц
+	pageContent := strings.Split(string(content), "===============") // Разделитель страниц ел.книги
 
 	bot, err := setupTelegramBot()
 	if err != nil {
