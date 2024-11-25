@@ -8,12 +8,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    
       - name: Подготовка репозитория
         uses: actions/checkout@v2
-        
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -37,7 +36,6 @@ jobs:
     needs: build
 
     steps:
-
       - name: Деплой на удаленный сервер
         uses: appleboy/ssh-action@master
         with:
@@ -49,4 +47,4 @@ jobs:
             docker pull sermildev/telegram-bot:v0.1
             docker stop telegram-bot || true
             docker rm telegram-bot || true
-            docker run -e BOT_TOKEN -d --restart always -p 80:80 --name telegram-bot sermildev/telegram-bot:v0.1
+            docker run -e BOT_TOKEN -d --restart always -p 8082:80 --name telegram-bot sermildev/telegram-bot:v0.1
